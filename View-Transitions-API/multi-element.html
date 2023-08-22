@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>multi element transitions</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+    <style>
+        ::view-transition-old(root), /* 旧视图*/
+        ::view-transition-new(root) { /* 新视图*/
+            animation-duration: 0.5s; /* 执行动画的时间 */
+        }
+        #app {
+            position: absolute;
+            left: 50%;
+            top: 20%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            display: flex;
+            justify-content: space-between;
+        }
+        #dialog {
+            width: 300px;
+            height: 200px;
+            view-transition-name: dialog;
+        }
+        /* 消除打开后dialog出现按钮背景 */
+        ::view-transition-old(dialog) {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 不同元素之间的过渡 -->
+    <div id="app">
+        <button type="button" class="btn btn-primary" id="left">靠左</button>
+        <button type="button" class="btn btn-primary" id="center">居中</button>
+        <button type="button" class="btn btn-primary" id="right">靠右</button>
+    </div>
+    <dialog id="dialog">
+        <form method="dialog">
+            我是弹窗
+            <button>关闭</button>
+        </form>
+    </dialog>
+    <script>
+        const App = document.getElementById("app")
+        const Dialog = document.getElementById("dialog")
+        App.addEventListener("click", (event) => {
+            if (event.target.tagName === 'BUTTON') {
+                event.target.style.viewTransitionName = "dialog"
+                if (document.startViewTransition) {
+                    document.startViewTransition(() => {
+                        Dialog.showModal()
+                        event.target.style.viewTransitionName = ""
+                    });
+                } else {
+                    Dialog.showModal()
+                }
+            }
+        })
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
